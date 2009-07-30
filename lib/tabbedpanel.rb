@@ -11,8 +11,8 @@ module TabbedPanel
       tabctx = TabbedContext.new(self, opts)
       if block_given?
         extra_html = capture(tabctx, &block)
-        concat(tabctx.render, block.binding)
-        concat(extra_html, block.binding)
+        concat(tabctx.render)
+        concat(extra_html)
       end
 
       return tabctx
@@ -26,6 +26,7 @@ module TabbedPanel
     include ActionView::Helpers::TagHelper
 
     def initialize(view, opts = {})
+      @gen_id=0
       @view = view
       @default_first_tab_active = opts[:default_first_tab_active].nil? ? true : opts[:set_first_tab_active]
       @active_panel = opts[:active_panel]
@@ -56,12 +57,11 @@ module TabbedPanel
       @view.output_buffer = val
     end
 
-    @@gen_id=0
 
     def idgen(prefix=nil)
       prefix ||= @base_name 
-      @@gen_id += 1
-      "#{prefix}_#{@@gen_id}"
+      @gen_id += 1
+      "#{prefix}_#{@gen_id}"
     end
 
     def function_name
